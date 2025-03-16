@@ -10,24 +10,27 @@ import org.testng.annotations.Test;
 import static org.hamcrest.Matchers.equalTo;
 
 public class PutUpdatePetTest extends TestBase {
+
     @Test(priority = 1, groups = "Principal", dependsOnMethods = "br.com.petstore.tests.PostCreatePetTest.cadastrarNovoPetComSucesso")
     public void atualizarPetComSucesso() {
-        // Arrange
+        //region Arrange
         PetObject pet = new PetObject();
         pet.setId(PostCreatePetTest.getPetCadastrado().getId());
         pet.setName("doggie");
         pet.setStatus("sold");
+        //endregion
 
-        // Act
+        //region Act
         PutUpdatePetRequest request = new PutUpdatePetRequest();
         request.setJsonBody(pet);
         ValidatableResponse response = request.executeRequest();
+        //endregion
 
-        // Configurar detalhes para o relatório
         setTestDetails(request.service, pet, response);
 
-        // Assert
+        //region Assert
         response.statusCode(HttpStatus.SC_OK);
         response.body("status", equalTo("sold"));
+        //endregion
     }
 }

@@ -11,12 +11,13 @@ import static org.hamcrest.Matchers.equalTo;
 import java.util.Collections;
 
 public class PostCreatePetTest extends TestBase {
+
     @Getter
     private static PetObject petCadastrado;
 
     @Test(priority = 1, groups = "Principal")
     public void cadastrarNovoPetComSucesso() {
-        // Arrange
+        //region Arrange
         PetObject pet = new PetObject();
         pet.setId(1002);
 
@@ -34,19 +35,19 @@ public class PostCreatePetTest extends TestBase {
         pet.setTags(Collections.singletonList(tag));
 
         pet.setStatus("available");
+        //endregion
 
-        // Act
+        //region Act
         PostCreatePetRequest request = new PostCreatePetRequest();
         request.setJsonBody(pet);
         ValidatableResponse response = request.executeRequest();
+        //endregion
 
-        // Salva o objeto completo para os outros testes
         petCadastrado = response.extract().as(PetObject.class);
 
-        // Configurar detalhes para o relatório
         setTestDetails(request.service, pet, response);
 
-        // Assert
+        //region Assert
         response.statusCode(HttpStatus.SC_OK);
         response.body("id", equalTo(pet.getId()));
         response.body("category.id", equalTo(pet.getCategory().getId()));
@@ -56,5 +57,6 @@ public class PostCreatePetTest extends TestBase {
         response.body("tags[0].id", equalTo(pet.getTags().get(0).getId()));
         response.body("tags[0].name", equalTo(pet.getTags().get(0).getName()));
         response.body("status", equalTo(pet.getStatus()));
+        //endregion
     }
 }

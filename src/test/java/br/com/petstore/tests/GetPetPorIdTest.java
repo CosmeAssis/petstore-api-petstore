@@ -13,19 +13,20 @@ public class GetPetPorIdTest extends TestBase {
 
     @Test(priority = 1, groups = "Principal", dependsOnMethods = "br.com.petstore.tests.PostCreatePetTest.cadastrarNovoPetComSucesso")
     public void consultarPetComSucesso() {
-        // Arrange
+        //region Arrange
         PetObject petEsperado = PostCreatePetTest.getPetCadastrado();
         int petId = petEsperado.getId();
         int statusCodeEsperado = HttpStatus.SC_OK;
+        //endregion
 
-        // Act
+        //region Act
         GetPetPorIdRequest getPetPorIdRequest = new GetPetPorIdRequest(petId);
         ValidatableResponse response = getPetPorIdRequest.executeRequest();
+        //endregion
 
-        // Configurar detalhes para o relatório
         setTestDetails(getPetPorIdRequest.service, null, response);
 
-        // Assert - Validando todos os campos da resposta
+        //region Assert
         response.statusCode(statusCodeEsperado);
         response.body("id", equalTo(petEsperado.getId()));
         response.body("category.id", equalTo(petEsperado.getCategory().getId()));
@@ -35,5 +36,6 @@ public class GetPetPorIdTest extends TestBase {
         response.body("tags[0].id", equalTo(petEsperado.getTags().get(0).getId()));
         response.body("tags[0].name", equalTo(petEsperado.getTags().get(0).getName()));
         response.body("status", equalTo(petEsperado.getStatus()));
+        //endregion
     }
 }
