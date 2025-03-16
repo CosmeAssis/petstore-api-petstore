@@ -11,22 +11,26 @@ import static org.hamcrest.Matchers.equalTo;
 public class PostCreatePetTest extends TestBase {
     @Test(priority = 1, groups = "Principal")
     public void cadastrarNovoPetComSucesso() {
-        // Arrange
+        //region Arrange
         PetObject pet = new PetObject();
         pet.setId(1001);
         pet.setName("Bobby");
         pet.setStatus("available");
+        //endregion
 
-        // Act
+        //region Act
         PostCreatePetRequest request = new PostCreatePetRequest();
         request.setJsonBody(pet);
         ValidatableResponse response = request.executeRequest();
+        //endregion
 
-        // Configurar detalhes para o relatório
+        //region Configurar detalhes para o relatório
         setTestDetails(request.service, pet, response);
+        //endregion
 
-        // Assert
+        //region Assert
         response.statusCode(HttpStatus.SC_OK);
         response.body("name", equalTo("Bobby"));
+        //endregion
     }
 }

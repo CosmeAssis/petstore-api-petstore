@@ -3,7 +3,7 @@
     <test name="API Tests">
         <classes>
             <class name="br.com.petstore.tests.PostCreatePetTest"/>
-            <class name="br.com.petstore.tests.GetPetTest"/>
+            <class name="br.com.petstore.tests.GetPetPorIdTest"/>
         </classes>
     </test>
 </suite>
