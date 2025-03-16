@@ -40,13 +40,13 @@ public class PostCreatePetTest extends TestBase {
         request.setJsonBody(pet);
         ValidatableResponse response = request.executeRequest();
 
-        // Salva o objeto inteiro para os outros testes
+        // Salva o objeto completo para os outros testes
         petCadastrado = response.extract().as(PetObject.class);
 
         // Configurar detalhes para o relatório
         setTestDetails(request.service, pet, response);
 
-        // Assert - Validando todos os campos da resposta
+        // Assert
         response.statusCode(HttpStatus.SC_OK);
         response.body("id", equalTo(pet.getId()));
         response.body("category.id", equalTo(pet.getCategory().getId()));

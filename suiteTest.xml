@@ -4,6 +4,8 @@
         <classes>
             <class name="br.com.petstore.tests.PostCreatePetTest"/>
             <class name="br.com.petstore.tests.GetPetPorIdTest"/>
+            <class name="br.com.petstore.tests.PutUpdatePetTest"/>
+            <class name="br.com.petstore.tests.DeletePetPorIdTest"/>
         </classes>
     </test>
 </suite>

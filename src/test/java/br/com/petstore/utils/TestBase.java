@@ -4,11 +4,14 @@ import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.Status;
 import com.aventstack.extentreports.reporter.ExtentSparkReporter;
+import com.aventstack.extentreports.reporter.configuration.Theme;
 import io.restassured.response.ValidatableResponse;
 import org.testng.ITestResult;
 import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public abstract class TestBase {
     private static ExtentReports extent;
@@ -19,33 +22,47 @@ public abstract class TestBase {
 
     @BeforeSuite
     public void setupSuite() {
-        ExtentSparkReporter spark = new ExtentSparkReporter("target/extent-report.html");
+        // Gerar um nome de relatório único com data e hora
+        String timestamp = new SimpleDateFormat("yyyyMMdd-HHmmss").format(new Date());
+        String reportFile = "target/extent-report-" + timestamp + ".html";
+
+        ExtentSparkReporter spark = new ExtentSparkReporter(reportFile);
+        spark.config().setTheme(Theme.DARK); // 🔹 Aplicando tema escuro para melhor visualização
+        spark.config().setDocumentTitle("PetStore API Automation Report - " + timestamp);
+        spark.config().setReportName("Resultados dos Testes - " + timestamp);
+
         extent = new ExtentReports();
         extent.attachReporter(spark);
+        extent.setSystemInfo("Projeto", "PetStore API");
+        extent.setSystemInfo("Autor", "Equipe QA");
+        extent.setSystemInfo("Linguagem", "Java 21");
+        extent.setSystemInfo("Framework", "TestNG + RestAssured");
     }
 
     @BeforeMethod
     public void setupTest(Method method) {
-        test = extent.createTest(method.getName());
+        test = extent.createTest("📝 " + method.getName()); // 🔹 Melhorando nome do teste
     }
 
-    @AfterMethod
+    @AfterMethod(alwaysRun = true)
     public void logTestResult(ITestResult result) {
+        String baseUrl = PropertiesLoader.getProperty("base.url");
+
         if (endpoint != null) {
-            test.info("**Endpoint:** " + endpoint);
+            test.info("<b>🔗 Endpoint:</b> " + baseUrl + endpoint); // 🔹 Agora exibe URL completa
         }
         if (requestBody != null) {
-            test.info("**Request:** " + requestBody.toString());
+            test.info("<b>📤 Request:</b> <pre>" + requestBody.toString() + "</pre>");
         }
         if (response != null) {
-            test.info("**Response:** " + response.extract().asString());
-            test.info("**Status Code:** " + response.extract().statusCode());
+            test.info("<b>📥 Response:</b> <pre>" + response.extract().asPrettyString() + "</pre>");
+            test.info("<b>📌 Status Code:</b> " + response.extract().statusCode());
         }
 
         if (result.getStatus() == ITestResult.SUCCESS) {
-            test.log(Status.PASS, "Teste passou com sucesso!");
+            test.log(Status.PASS, "✅ Teste passou com sucesso!");
         } else if (result.getStatus() == ITestResult.FAILURE) {
-            test.log(Status.FAIL, "Teste falhou: " + result.getThrowable().getMessage());
+            test.log(Status.FAIL, "❌ Teste falhou: " + result.getThrowable().getMessage());
         }
     }
 
