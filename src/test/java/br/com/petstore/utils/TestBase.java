@@ -22,14 +22,19 @@ public abstract class TestBase {
 
     @BeforeSuite
     public void setupSuite() {
+        // Pegando configurações do `global.properties`
+        String reportTitle = PropertiesLoader.getProperty("report.title", "PetStore API Test Report");
+        String reportName = PropertiesLoader.getProperty("report.name", "Test Results");
+        String theme = PropertiesLoader.getProperty("report.theme", "DARK");
+
         // Gerar um nome de relatório único com data e hora
         String timestamp = new SimpleDateFormat("yyyyMMdd-HHmmss").format(new Date());
         String reportFile = "target/extent-report-" + timestamp + ".html";
 
         ExtentSparkReporter spark = new ExtentSparkReporter(reportFile);
-        spark.config().setTheme(Theme.DARK); // 🔹 Aplicando tema escuro para melhor visualização
-        spark.config().setDocumentTitle("PetStore API Automation Report - " + timestamp);
-        spark.config().setReportName("Resultados dos Testes - " + timestamp);
+        spark.config().setTheme(theme.equalsIgnoreCase("DARK") ? Theme.DARK : Theme.STANDARD);
+        spark.config().setDocumentTitle(reportTitle + " - " + timestamp);
+        spark.config().setReportName(reportName + " - " + timestamp);
 
         extent = new ExtentReports();
         extent.attachReporter(spark);
@@ -41,7 +46,7 @@ public abstract class TestBase {
 
     @BeforeMethod
     public void setupTest(Method method) {
-        test = extent.createTest("📝 " + method.getName()); // 🔹 Melhorando nome do teste
+        test = extent.createTest("📝 " + method.getName());
     }
 
     @AfterMethod(alwaysRun = true)
@@ -49,7 +54,7 @@ public abstract class TestBase {
         String baseUrl = PropertiesLoader.getProperty("base.url");
 
         if (endpoint != null) {
-            test.info("<b>🔗 Endpoint:</b> " + baseUrl + endpoint); // 🔹 Agora exibe URL completa
+            test.info("<b>🔗 Endpoint:</b> " + baseUrl + endpoint);
         }
         if (requestBody != null) {
             test.info("<b>📤 Request:</b> <pre>" + requestBody.toString() + "</pre>");
@@ -63,6 +68,8 @@ public abstract class TestBase {
             test.log(Status.PASS, "✅ Teste passou com sucesso!");
         } else if (result.getStatus() == ITestResult.FAILURE) {
             test.log(Status.FAIL, "❌ Teste falhou: " + result.getThrowable().getMessage());
+        } else if (result.getStatus() == ITestResult.SKIP) {
+            test.log(Status.SKIP, "⚠️ Teste pulado.");
         }
     }
 

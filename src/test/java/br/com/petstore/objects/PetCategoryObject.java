@@ -3,8 +3,7 @@ package br.com.petstore.objects;
 import lombok.Data;
 
 @Data
-public class OrderObject {
+public class PetCategoryObject {
     private int id;
-    private int petId;
-    private int quantity;
+    private String name;
 }
