@@ -4,29 +4,28 @@ import io.restassured.response.ValidatableResponse;
 import static io.restassured.RestAssured.given;
 
 public abstract class RequestBase {
-    protected String baseUrl = PropertiesLoader.getProperty("base.url");
-    protected String endpoint;
+    public String service;
     protected String method;
-    protected Object body;
+    protected Object jsonBody;
 
-    public void setEndpoint(String endpoint) {
-        this.endpoint = endpoint;
-    }
-
-    public void setMethod(String method) {
-        this.method = method;
-    }
-
-    public void setBody(Object body) {
-        this.body = body;
+    public void setJsonBody(Object object) {
+        this.jsonBody = object;
     }
 
     public ValidatableResponse executeRequest() {
-        return given()
-                .header("Content-Type", "application/json")
-                .body(body)
-                .when()
-                .request(method, baseUrl + endpoint)
-                .then();
+        if (jsonBody != null) {
+            return given()
+                    .header("Content-Type", "application/json")
+                    .body(jsonBody)
+                    .when()
+                    .request(method, PropertiesLoader.getProperty("base.url") + service)
+                    .then();
+        } else {
+            return given()
+                    .header("Content-Type", "application/json")
+                    .when()
+                    .request(method, PropertiesLoader.getProperty("base.url") + service)
+                    .then();
+        }
     }
 }

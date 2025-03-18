@@ -2,8 +2,10 @@
 <suite name="API Automation Suite">
     <test name="API Tests">
         <classes>
-            <class name="br.com.petstore.tests.PostCreatePetTest"/>
-            <class name="br.com.petstore.tests.GetPetTest"/>
+            <class name="br.com.petstore.tests.PostCreatePetPorIdTest"/>
+            <class name="br.com.petstore.tests.GetPetPorIdTest"/>
+            <class name="br.com.petstore.tests.PutUpdatePetPorIdTest"/>
+            <class name="br.com.petstore.tests.DeletePetPorIdTest"/>
         </classes>
     </test>
 </suite>
