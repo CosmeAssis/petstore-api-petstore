@@ -6,6 +6,7 @@ import br.com.petstore.objects.PetTagObject;
 import br.com.petstore.requests.GetPetPorIdRequest;
 import br.com.petstore.requests.PostCreatePetPorIdRequest;
 import br.com.petstore.utils.TestBase;
+import com.github.javafaker.Faker;
 import io.restassured.response.ValidatableResponse;
 import org.apache.hc.core5.http.HttpStatus;
 import org.testng.annotations.Test;
@@ -15,6 +16,8 @@ import static org.hamcrest.Matchers.equalTo;
 
 public class GetPetPorIdTest extends TestBase {
 
+    private static final Faker faker = new Faker();
+
     PetCategoryObject petCategoryObject = new PetCategoryObject();
     PetObject petObject = new PetObject();
     PetTagObject petTagObject = new PetTagObject();
@@ -22,16 +25,16 @@ public class GetPetPorIdTest extends TestBase {
     @Test(priority = 1, groups = "Principal")
     public void consultarPetPorIdComSucesso() {
         //region Arrange
-        petCategoryObject.setId(152031);
-        petCategoryObject.setName("Cachorro");
+        petCategoryObject.setId(faker.number().numberBetween(1000, 9999));
+        petCategoryObject.setName(faker.animal().name());
 
-        petTagObject.setId(100);
-        petTagObject.setName("Dog");
+        petTagObject.setId(faker.number().randomDigit());
+        petTagObject.setName(faker.color().name());
 
-        petObject.setId(1003);
+        petObject.setId(faker.number().numberBetween(1000, 9999));
         petObject.setCategory(petCategoryObject);
-        petObject.setName("doggie");
-        petObject.setPhotoUrls(singletonList("String"));
+        petObject.setName(faker.name().firstName());
+        petObject.setPhotoUrls(singletonList(faker.internet().avatar()));
         petObject.setTags(singletonList(petTagObject));
         petObject.setStatus("available");
 
@@ -43,12 +46,12 @@ public class GetPetPorIdTest extends TestBase {
         int statusEsperado = HttpStatus.SC_OK;
         //endregion
 
-        //region Act
+        //region Acct
         GetPetPorIdRequest getPetPorIdRequest = new GetPetPorIdRequest(petIdEsperado);
         ValidatableResponse response = getPetPorIdRequest.executeRequest();
-        //endregion
 
         setTestDetails(getPetPorIdRequest.service, null, response);
+        //endregion
 
         //region Assert
         response.statusCode(statusEsperado);
@@ -68,7 +71,7 @@ public class GetPetPorIdTest extends TestBase {
     @Test(priority = 2, groups = "Exceção")
     public void consultarPetPorIdInexistente() {
         //region Arrange
-        int petIdEsperado = 100300;
+        int petIdEsperado = 199999300;
 
         int statusEsperado = HttpStatus.SC_NOT_FOUND;
         String mensagemEsperada = "Pet not found";
