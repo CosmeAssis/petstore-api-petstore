@@ -22,7 +22,6 @@ public abstract class TestBase {
     protected Object requestBody;
     protected ValidatableResponse response;
 
-    // Configurar GSON para JSON formatado
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
     @BeforeSuite
@@ -31,7 +30,6 @@ public abstract class TestBase {
         String reportName = PropertiesLoader.getProperty("report.name", "Test Results");
         String theme = PropertiesLoader.getProperty("report.theme", "DARK");
 
-        // Criando um nome de arquivo único para cada execução
         String timestamp = new SimpleDateFormat("yyyyMMdd-HHmmss").format(new Date());
         String reportFile = "target/extent-report-" + timestamp + ".html";
 
@@ -39,7 +37,14 @@ public abstract class TestBase {
         spark.config().setTheme(theme.equalsIgnoreCase("DARK") ? Theme.DARK : Theme.STANDARD);
         spark.config().setDocumentTitle(reportTitle + " - " + timestamp);
         spark.config().setReportName(reportName + " - " + timestamp);
-        spark.config().setTimelineEnabled(true);
+        spark.config().setTimelineEnabled(false);
+        spark.config().setEncoding("UTF-8");
+
+        // Custom CSS for modern look
+        String customCSS = "body { font-family: Arial, sans-serif; } " +
+                "h1, h2, h3 { color: #333; } " +
+                ".test-status { font-weight: bold; padding: 5px; border-radius: 5px; }";
+        spark.config().setCss(customCSS);
 
         extent = new ExtentReports();
         extent.attachReporter(spark);
@@ -58,6 +63,7 @@ public abstract class TestBase {
     @AfterMethod(alwaysRun = true)
     public void logTestResult(ITestResult result) {
         String baseUrl = PropertiesLoader.getProperty("base.url");
+        long duration = (result.getEndMillis() - result.getStartMillis()) / 1000;
 
         System.out.println("\n===============================================");
         System.out.println("🔹 Teste: " + result.getMethod().getMethodName());
@@ -72,26 +78,24 @@ public abstract class TestBase {
             System.out.println("📤 Request:\n" + requestJson);
         }
         if (response != null) {
-            // Obtendo e formatando o response
             String responseJson = response.extract().asPrettyString();
             test.info("<b>📥 Response:</b> <pre>" + responseJson + "</pre>");
             System.out.println("📥 Response:\n" + responseJson);
             System.out.println("📌 Status Code: " + response.extract().statusCode());
         }
 
-        // Status do teste
         switch (result.getStatus()) {
             case ITestResult.SUCCESS:
                 test.log(Status.PASS, "✅ Teste passou com sucesso!");
-                System.out.println("✅ Teste passou com sucesso!");
+                test.info("<b>Tempo de execução:</b> " + duration + "s");
                 break;
             case ITestResult.FAILURE:
                 test.log(Status.FAIL, "❌ Teste falhou: " + result.getThrowable().getMessage());
-                System.out.println("❌ Teste falhou: " + result.getThrowable().getMessage());
+                test.info("<b>Tempo de execução:</b> " + duration + "s");
                 break;
             case ITestResult.SKIP:
                 test.log(Status.SKIP, "⚠️ Teste pulado.");
-                System.out.println("⚠️ Teste pulado.");
+                test.info("<b>Tempo de execução:</b> " + duration + "s");
                 break;
         }
 
