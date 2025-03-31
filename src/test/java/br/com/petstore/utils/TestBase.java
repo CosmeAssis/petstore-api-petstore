@@ -22,6 +22,9 @@ public abstract class TestBase {
     protected Object requestBody;
     protected ValidatableResponse response;
 
+    // Configurar GSON para JSON formatado
+    private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
     @BeforeSuite
     public void setupSuite() {
         String reportTitle = PropertiesLoader.getProperty("report.title", "PetStore API Test Report");
@@ -52,15 +55,11 @@ public abstract class TestBase {
         System.out.println("\n🔹 Iniciando teste: " + method.getName());
     }
 
-    // Configurar GSON para JSON formatado
-    private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
-
     @AfterMethod(alwaysRun = true)
     public void logTestResult(ITestResult result) {
         String baseUrl = PropertiesLoader.getProperty("base.url");
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-        System.out.println("===============================================");
+        System.out.println("\n===============================================");
         System.out.println("🔹 Teste: " + result.getMethod().getMethodName());
 
         if (endpoint != null) {
@@ -73,24 +72,30 @@ public abstract class TestBase {
             System.out.println("📤 Request:\n" + requestJson);
         }
         if (response != null) {
-            String responseJson = gson.toJson(response.extract().asPrettyString());
+            // Obtendo e formatando o response
+            String responseJson = response.extract().asPrettyString();
             test.info("<b>📥 Response:</b> <pre>" + responseJson + "</pre>");
             System.out.println("📥 Response:\n" + responseJson);
             System.out.println("📌 Status Code: " + response.extract().statusCode());
         }
 
-        if (result.getStatus() == ITestResult.SUCCESS) {
-            test.log(Status.PASS, "✅ Teste passou com sucesso!");
-            System.out.println("✅ Teste passou com sucesso!");
-        } else if (result.getStatus() == ITestResult.FAILURE) {
-            test.log(Status.FAIL, "❌ Teste falhou: " + result.getThrowable().getMessage());
-            System.out.println("❌ Teste falhou: " + result.getThrowable().getMessage());
-        } else if (result.getStatus() == ITestResult.SKIP) {
-            test.log(Status.SKIP, "⚠️ Teste pulado.");
-            System.out.println("⚠️ Teste pulado.");
+        // Status do teste
+        switch (result.getStatus()) {
+            case ITestResult.SUCCESS:
+                test.log(Status.PASS, "✅ Teste passou com sucesso!");
+                System.out.println("✅ Teste passou com sucesso!");
+                break;
+            case ITestResult.FAILURE:
+                test.log(Status.FAIL, "❌ Teste falhou: " + result.getThrowable().getMessage());
+                System.out.println("❌ Teste falhou: " + result.getThrowable().getMessage());
+                break;
+            case ITestResult.SKIP:
+                test.log(Status.SKIP, "⚠️ Teste pulado.");
+                System.out.println("⚠️ Teste pulado.");
+                break;
         }
 
-        System.out.println("===============================================");
+        System.out.println("===============================================\n");
     }
 
     @AfterSuite

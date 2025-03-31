@@ -1,18 +1,15 @@
+# Usa uma imagem oficial do Maven com Java 21
 FROM maven:3.9.6-eclipse-temurin-21 AS build
 
 WORKDIR /app
 
-# Copia apenas o pom.xml primeiro (para cache de dependências)
-COPY pom.xml ./
-RUN mvn dependency:go-offline
-
-# Agora copia o código-fonte
+# Copia os arquivos do projeto para dentro do container
 COPY . .
 
-# Compila o projeto
-RUN mvn clean package
+# Baixa as dependências antes da execução para acelerar builds futuros
+RUN mvn dependency:go-offline
 
-FROM openjdk:21-jdk-slim
-WORKDIR /app
-COPY --from=build /app /app
+# Compila o projeto (opcional, pois o comando final pode rodar diretamente os testes)
+RUN mvn clean package -DskipTests
+
 CMD ["mvn", "test"]

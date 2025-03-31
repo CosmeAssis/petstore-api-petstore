@@ -1,5 +1,5 @@
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
-<suite name="PetStore Tests" parallel="false" verbose="1" configfailurepolicy="continue">
+<suite name="PetStore Tests" parallel="false" verbose="1" configfailurepolicy="continue" allow-return-values="true">
     <test name="API Tests">
         <classes>
             <class name="br.com.petstore.tests.PostCreatePetPorIdTest"/>

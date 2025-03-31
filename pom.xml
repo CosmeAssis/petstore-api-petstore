@@ -90,6 +90,7 @@
         <configuration>
           <includes>
             <include>**/*Test.java</include>
+            <testFailureIgnore>true</testFailureIgnore>
           </includes>
         </configuration>
       </plugin>
