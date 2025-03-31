@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  petstore-tests:
+    build: .
+    container_name: petstore-automation
+    volumes:
+      - .:/app
+    working_dir: /app
+    command: ["mvn", "test", "-DinteractiveMode=false", "-Dmaven.test.failure.ignore=true"]
+    environment:
+      - MAVEN_OPTS=-Xmx512m

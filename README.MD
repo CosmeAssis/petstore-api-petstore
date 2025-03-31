@@ -64,14 +64,9 @@ mvn test -Dtest=PostCreatePetTest#testCreatePetSuccessfully
 ```
 
 ### 🐳 Execução com Docker (Opcional)
-1. Construir imagem Docker
+1. Executar testes no container Docker
 ```bash
-docker build -t petstore-automation .
-```
-
-2. Executar testes no container
-```bash
-docker run petstore-automation
+docker-compose up --build
 ```
 
 ## 📂 Estrutura do Projeto
