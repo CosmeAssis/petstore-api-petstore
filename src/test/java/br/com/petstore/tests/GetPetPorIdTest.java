@@ -22,7 +22,7 @@ public class GetPetPorIdTest extends TestBase {
     PetObject petObject = new PetObject();
     PetTagObject petTagObject = new PetTagObject();
 
-    @Test(priority = 1, groups = "Principal")
+    @Test(description = "Consulta de Pet por ID Com Sucesso", groups = "Principal")
     public void consultarPetPorIdComSucesso() {
         //region Arrange
         petCategoryObject.setId(faker.number().numberBetween(1000, 9999));
@@ -68,7 +68,7 @@ public class GetPetPorIdTest extends TestBase {
         //endregion
     }
 
-    @Test(priority = 2, groups = "Exceção")
+    @Test(description = "Consultar Pet por ID Inexistente", groups = "Exceção")
     public void consultarPetPorIdInexistente() {
         //region Arrange
         int petIdEsperado = 199999300;

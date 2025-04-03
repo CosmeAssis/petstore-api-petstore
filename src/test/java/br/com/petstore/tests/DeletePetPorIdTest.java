@@ -21,7 +21,7 @@ public class DeletePetPorIdTest extends TestBase {
     PetObject petObject = new PetObject();
     PetTagObject petTagObject = new PetTagObject();
 
-    @Test(priority = 1, groups = "Principal")
+    @Test(description = "Deletar Pet com Sucesso", groups = "Principal")
     public void deletarPetComSucesso() {
         //region Arrange
         petCategoryObject.setId(faker.number().numberBetween(1000, 9999));
@@ -56,8 +56,8 @@ public class DeletePetPorIdTest extends TestBase {
         //endregion
     }
 
-    @Test(priority = 2, groups = "Exceção")
-    public void deletarPetComIdInvalido() {
+    @Test(description = "Deletar Pet com Id Inexistente na base", groups = "Exceção")
+    public void deletarPetComIdInexistente() {
         //region Arrange
         int petId = 999837618;
         //endregion
