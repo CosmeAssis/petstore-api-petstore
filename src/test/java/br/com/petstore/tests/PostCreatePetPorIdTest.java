@@ -21,7 +21,7 @@ public class PostCreatePetPorIdTest extends TestBase {
     PetObject petObject = new PetObject();
     PetTagObject petTagObject = new PetTagObject();
 
-    @Test(priority = 1, groups = "Principal")
+    @Test(description = "Cadastrar Novo Pet Com Sucesso", groups = "Principal")
     public void cadastrarNovoPetComSucesso() {
         //region Arrange
         petCategoryObject.setId(faker.number().numberBetween(1000, 9999));
