@@ -43,7 +43,7 @@ public class PutUpdatePetPorIdTest extends TestBase {
         ValidatableResponse postResponse = postRequest.executeRequest();
 
         int petId = postResponse.extract().jsonPath().getInt("id");
-        int statusCodeEsperado =  HttpStatus.SC_OK;
+        int statusCodeEsperado = HttpStatus.SC_OK;
         //endregion
 
         // Criar objeto atualizado
@@ -53,12 +53,12 @@ public class PutUpdatePetPorIdTest extends TestBase {
         petAtualizado.setStatus("sold");
 
         //region Act
-        PutUpdatePetPorIdRequest putRequest = new PutUpdatePetPorIdRequest();
-        putRequest.setJsonBody(petAtualizado);
-        ValidatableResponse response = putRequest.executeRequest();
+        PutUpdatePetPorIdRequest putUpdatePetPorIdRequest = new PutUpdatePetPorIdRequest();
+        putUpdatePetPorIdRequest.setJsonBody(petAtualizado);
+        ValidatableResponse response = putUpdatePetPorIdRequest.executeRequest();
         //endregion
 
-        setTestDetails(putRequest.service, petAtualizado, response);
+        setTestDetails(putUpdatePetPorIdRequest.service, putUpdatePetPorIdRequest.method, petAtualizado, response);
 
         //region Assert
         response.statusCode(statusCodeEsperado);

@@ -8,7 +8,7 @@ import static io.restassured.RestAssured.given;
 
 public abstract class RequestBase {
     public String service;
-    protected String method;
+    public String method;
 
     @Setter
     protected Object jsonBody;

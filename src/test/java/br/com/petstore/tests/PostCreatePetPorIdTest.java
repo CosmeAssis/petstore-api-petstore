@@ -46,7 +46,7 @@ public class PostCreatePetPorIdTest extends TestBase {
         ValidatableResponse response = postCreatePetPorIdRequest.executeRequest();
         //endregion
 
-        setTestDetails(postCreatePetPorIdRequest.service, petObject, response);
+        setTestDetails(postCreatePetPorIdRequest.service, postCreatePetPorIdRequest.method, petObject, response);
 
         //region Assert
         response.statusCode(statusCodeEsperado);
