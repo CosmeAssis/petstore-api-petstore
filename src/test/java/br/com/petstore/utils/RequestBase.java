@@ -1,31 +1,34 @@
 package br.com.petstore.utils;
 
 import io.restassured.response.ValidatableResponse;
+import io.restassured.specification.RequestSpecification;
+import lombok.Setter;
+
 import static io.restassured.RestAssured.given;
 
 public abstract class RequestBase {
     public String service;
-    protected String method;
+    public String method;
+
+    @Setter
     protected Object jsonBody;
 
-    public void setJsonBody(Object object) {
-        this.jsonBody = object;
-    }
-
     public ValidatableResponse executeRequest() {
-        if (jsonBody != null) {
-            return given()
-                    .header("Content-Type", "application/json")
-                    .body(jsonBody)
-                    .when()
-                    .request(method, PropertiesLoader.getProperty("base.url") + service)
-                    .then();
-        } else {
-            return given()
-                    .header("Content-Type", "application/json")
-                    .when()
-                    .request(method, PropertiesLoader.getProperty("base.url") + service)
-                    .then();
+        RequestSpecification request = given()
+                .header("Content-Type", "application/json");
+
+        String token = PropertiesLoader.getProperty("access.token");
+        if (token != null && !token.isEmpty()) {
+            request.header("Authorization", "Bearer " + token);
         }
+
+        if (jsonBody != null) {
+            request.body(jsonBody);
+        }
+
+        return request
+                .when()
+                .request(method, PropertiesLoader.getProperty("base.url") + service)
+                .then();
     }
 }

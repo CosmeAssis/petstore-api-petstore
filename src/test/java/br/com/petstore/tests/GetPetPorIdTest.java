@@ -24,7 +24,6 @@ public class GetPetPorIdTest extends TestBase {
 
     @Test(description = "Consulta de Pet por ID Com Sucesso", groups = "Principal")
     public void consultarPetPorIdComSucesso() {
-        //region Arrange
         petCategoryObject.setId(faker.number().numberBetween(1000, 9999));
         petCategoryObject.setName(faker.animal().name());
 
@@ -44,16 +43,12 @@ public class GetPetPorIdTest extends TestBase {
 
         int petIdEsperado = postResponse.extract().jsonPath().getInt("id");
         int statusEsperado = HttpStatus.SC_OK;
-        //endregion
 
-        //region Acct
         GetPetPorIdRequest getPetPorIdRequest = new GetPetPorIdRequest(petIdEsperado);
         ValidatableResponse response = getPetPorIdRequest.executeRequest();
 
-        setTestDetails(getPetPorIdRequest.service, null, response);
-        //endregion
+        setTestDetails(getPetPorIdRequest.service, getPetPorIdRequest.method, null, response);
 
-        //region Assert
         response.statusCode(statusEsperado);
         response.body("id", equalTo(petObject.getId()));
         response.body("name", equalTo(petObject.getName()));
@@ -65,28 +60,20 @@ public class GetPetPorIdTest extends TestBase {
         response.body("tags[0].id", equalTo(petTagObject.getId()));
         response.body("tags[0].name", equalTo(petTagObject.getName()));
         response.body("tags.size()", equalTo(petObject.getTags().size()));
-        //endregion
     }
 
     @Test(description = "Consultar Pet por ID Inexistente", groups = "Exceção")
     public void consultarPetPorIdInexistente() {
-        //region Arrange
         int petIdEsperado = 199999300;
-
         int statusEsperado = HttpStatus.SC_NOT_FOUND;
         String mensagemEsperada = "Pet not found";
-        //endregion
 
-        // Act
         GetPetPorIdRequest getPetPorIdRequest = new GetPetPorIdRequest(petIdEsperado);
         ValidatableResponse response = getPetPorIdRequest.executeRequest();
-        //endregion
 
-        setTestDetails(getPetPorIdRequest.service, null, response);
+        setTestDetails(getPetPorIdRequest.service, getPetPorIdRequest.method, null, response);
 
-        //region Assert
         response.statusCode(statusEsperado);
         response.body("message", equalTo(mensagemEsperada));
-        //endregion
     }
 }

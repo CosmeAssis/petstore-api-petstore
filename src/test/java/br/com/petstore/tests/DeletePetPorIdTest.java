@@ -48,7 +48,7 @@ public class DeletePetPorIdTest extends TestBase {
         DeletePetPorIdRequest deletePetPorIdRequest = new DeletePetPorIdRequest(petId);
         ValidatableResponse response = deletePetPorIdRequest.executeRequest();
 
-        setTestDetails(deletePetPorIdRequest.service, null, response);
+        setTestDetails(deletePetPorIdRequest.service, deletePetPorIdRequest.method, null, response);
         //endregion
 
         //region Assert
@@ -67,7 +67,7 @@ public class DeletePetPorIdTest extends TestBase {
         ValidatableResponse response = deletePetPorIdRequest.executeRequest();
         //endregion
 
-        setTestDetails(deletePetPorIdRequest.service, null, response);
+        setTestDetails(deletePetPorIdRequest.service, deletePetPorIdRequest.method, null, response);
 
         //region Assert
         response.statusCode(HttpStatus.SC_NOT_FOUND);

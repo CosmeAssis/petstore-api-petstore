@@ -1,8 +1,6 @@
 package br.com.petstore.utils;
 
 import com.aventstack.extentreports.*;
-import com.aventstack.extentreports.markuputils.ExtentColor;
-import com.aventstack.extentreports.markuputils.MarkupHelper;
 import com.aventstack.extentreports.reporter.ExtentSparkReporter;
 import com.aventstack.extentreports.reporter.configuration.Theme;
 import com.google.gson.Gson;
@@ -25,6 +23,7 @@ public abstract class TestBase {
     private static ExtentReports extent; // Objeto para gerar relatórios
     protected static ExtentTest test; // Objeto para capturar logs dos testes
     protected String endpoint; // Armazena o endpoint da requisição atual
+    protected String httpMethod; //Armazena o metodo de teste da requisição
     protected Object requestBody; // Armazena o corpo da requisição
     protected ValidatableResponse response; // Armazena a resposta da API
 
@@ -115,6 +114,12 @@ public abstract class TestBase {
             System.out.println("📤 Request:\n" + requestJson);
         }
 
+        //Registra o metodo de teste
+        if (httpMethod != null) {
+            test.info("<b>📡 HTTP Method:</b> " + httpMethod);
+            System.out.println("📡 HTTP Method: " + httpMethod);
+        }
+
         // Registra o corpo da resposta
         if (response != null) {
             String responseJson = response.extract().asPrettyString();
@@ -172,12 +177,13 @@ public abstract class TestBase {
     /**
      * Configura detalhes da requisição antes da execução do teste.
      *
-     * @param endpoint     Endpoint da API
-     * @param requestBody  Corpo da requisição
-     * @param response     Resposta da API
+     * @param endpoint    Endpoint da API
+     * @param requestBody Corpo da requisição
+     * @param response    Resposta da API
      */
-    protected void setTestDetails(String endpoint, Object requestBody, ValidatableResponse response) {
+    protected void setTestDetails(String endpoint, String httpMethod, Object requestBody, ValidatableResponse response) {
         this.endpoint = endpoint;
+        this.httpMethod = httpMethod;
         this.requestBody = requestBody;
         this.response = response;
     }
