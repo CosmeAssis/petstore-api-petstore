@@ -1,8 +1,6 @@
 package br.com.petstore.utils;
 
 import com.aventstack.extentreports.*;
-import com.aventstack.extentreports.markuputils.ExtentColor;
-import com.aventstack.extentreports.markuputils.MarkupHelper;
 import com.aventstack.extentreports.reporter.ExtentSparkReporter;
 import com.aventstack.extentreports.reporter.configuration.Theme;
 import com.google.gson.Gson;
